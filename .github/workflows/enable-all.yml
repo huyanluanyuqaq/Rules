@@ -18,12 +18,17 @@ jobs:
         sudo apt update
         sudo apt install gh -y
         
-    - name: Authenticate and enable workflows
+    - name: Configure GitHub CLI with PAT
       run: |
+        # 使用Personal Access Token而不是GITHUB_TOKEN
         echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
+        gh auth status
+        
+    - name: Enable all workflows
+      run: |
+        echo "正在启用所有工作流..."
         gh workflow enable --all
-        echo "所有工作流已启用！"
+        echo "✅ 所有工作流已启用！"
+        echo ""
         echo "当前工作流状态："
-        gh workflow list
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        gh workflow list --limit 30
